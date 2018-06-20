@@ -1,0 +1,53 @@
+import csv
+f = open('서울시 자치구별 가구당 월평균 소득.csv')
+g = open('서울시 자치구별 대학 진학률.csv')
+h = open('서울시 자치구별 종사 직업군.csv')
+data1 = csv.reader(f)
+data2 = csv.reader(g)
+data3 = csv.reader(h)
+result = []
+label = []
+name = input('궁금한 지역의 이름을 입력해주세요:')
+for row in data2 :
+    if name in row[0] :
+        for i in range(1,7):
+            result.append(float(row[i]))
+    if '지역' in row[0] :
+        for j in range(1,7):
+            label.append(row[j])
+            
+for u in range(5):
+    print(label[u],':',result[u],'%')
+
+import matplotlib.pyplot as plt
+plt.rc('font',family='Malgun Gothic')
+plt.figure(dpi=300)
+plt.rcParams.update({'font.size': 2.7})
+
+x=[]
+y=[]
+for row in data3:
+    if name in row[1]:
+        x.append(row[2])
+        y.append(float(row[3]))
+        if '소계' in row[2]:
+            y.remove(float(row[3]))
+            x.remove('소계')
+            
+plt.title('종사 직업군')            
+plt.bar(x,y)    
+
+
+a=[]
+for row in data1:
+    if name in row[0]:
+        for i in range(2,8):
+            a.append(row[i])
+
+plt.figure(figsize=(6,4), dpi=300)
+explode = (0.05, 0.05, 0.05, 0.05, 0.05, 0.05)
+labels = '1백만 미만', '1백만~2백만', '2백만~3백만', '3백만~4백만', '4백만~5백만', '5백만 이상'
+plt.title('소득분포')
+plt.pie(a, explode=explode, labels=labels, autopct='%1.1f%%', startangle=90)
+plt.axis('equal')
+plt.show()
